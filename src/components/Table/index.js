@@ -17,7 +17,7 @@ const RenderImage = ({src}) => {
 
 export default function EnhancedTable(props) {
   const {
-    rows = [], headCells = [], onSearch
+    rows = [], headCells = []
   } = props
 
   const [order, setOrder] = React.useState('asc');
@@ -73,6 +73,12 @@ export default function EnhancedTable(props) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const getNativeName = name => {
+    const nativeNames = Object.entries(name?.nativeName)
+    const nativeofficialNames = nativeNames.map(name => name[1].official)
+    return nativeofficialNames.join(' , ')
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -105,6 +111,12 @@ export default function EnhancedTable(props) {
                       { headCells.map(head => head.id !== 'id' && <TableCell key={head.id} align='center'>
                         { head?.image
                           ? <RenderImage src={row[head.id]} />
+                          : head.id === 'name'
+                          ? row?.name?.official
+                          : head.id === 'nativeName'
+                          ? getNativeName(row?.name)
+                          : head.id === 'callingCodes'
+                          ? `${row?.idd?.root}${row?.idd?.suffixes[0]}`
                           : String(row[head.id])
                         }
                         </TableCell>

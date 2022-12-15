@@ -17,7 +17,7 @@ const RenderImage = ({src}) => {
 
 export default function EnhancedTable(props) {
   const {
-    rows = [], headCells = []
+    rows = [], headCells = [], onClick
   } = props
 
   const [order, setOrder] = React.useState('asc');
@@ -103,12 +103,16 @@ export default function EnhancedTable(props) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      // onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       tabIndex={-1}
                       key={row.name}
                     >
-                      { headCells.map(head => head.id !== 'id' && <TableCell key={head.id} align='center'>
+                      { headCells.map(head => head.id !== 'id' && <TableCell
+                        onClick={head.id === 'name' ? () => onClick(row) : () => {}}
+                        key={head.id} align='center'
+                        style={{ cursor: 'pointer' }}
+                      >
                         { head?.image
                           ? <RenderImage src={row[head.id]} />
                           : head.id === 'name'

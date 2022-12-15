@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import Header from './components/Header'
 import Table from './components/Table'
+import Modal from './components/Modal'
 import './App.css';
 
 const headCells = [
@@ -17,6 +18,7 @@ const headCells = [
 function App() {
   const { mutate } = useSWRConfig()
   const { data, error } = useSWR('https://restcountries.com/v3.1/all', fetcher)
+  const [country, setCountry] = useState(null)
 
   const onSearch = event => {
     const value = event.target.value
@@ -29,10 +31,8 @@ function App() {
 
   return <div>
     <Header onSearch={onSearch} />
-    <Table
-      headCells={headCells}
-      rows={data || []}
-    />
+    <Table headCells={headCells} rows={data || []} onClick={data => setCountry(data)} />
+    <Modal data={country} open={!!country} onClose={() => setCountry(null)} />
   </div>
 }
 
